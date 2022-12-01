@@ -10,4 +10,14 @@ htmlMaterial = r.text
 
 soup = BeautifulSoup(htmlMaterial, 'html.parser')
 
-print(soup)
+iframes=soup.find_all('iframe')
+
+# for iframe in iframes:
+#     print (iframe['src'])
+
+
+imgs =soup.find_all('img')
+
+scripts = soup.find_all('script')
+
+print(scripts)
