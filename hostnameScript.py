@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 import re
 import originExtractor
 
-hellos = []
 
-def corsByProtcol(url):
+
+def corsByHostname(url, name_of_file):
 
     totalTags = 0
     totalCORS = 0
@@ -29,7 +29,7 @@ def corsByProtcol(url):
 
     # all tags that have a src attribute where the src is not our og source
     everything= soup.find_all(lambda tag: tag.has_attr("src"))
-    everythingCORS=soup.find_all(lambda tag: tag.has_attr("src") and originExtractor.get_protocol(tag["src"]) not in (protocol, None))
+    everythingCORS=soup.find_all(lambda tag: tag.has_attr("src") and originExtractor.get_hostname(tag["src"], hostname) != hostname)
     # print("percent")
     # print(len(everythingCORS))
 
@@ -39,7 +39,7 @@ def corsByProtcol(url):
     for tag in everything:
         totalTags += 1
 
-        if originExtractor.get_protocol(tag["src"]) != protocol:
+        if originExtractor.get_hostname(tag["src"], hostname) != hostname:
             totalCORS += 1
             tag["src"] = ""
 
@@ -80,15 +80,15 @@ def corsByProtcol(url):
         ci = 0
         for c in tag.contents:
             ci += 1
-            pros = re.findall('(\w+)://', c)
-            for pro in pros:
-                if pro != protocol:
+            hostnames = re.findall('://(www.)?([\w\-\.]+)', c)
+            for host in hostnames:
+                if host != hostname:
                     print(ci, tagi)
-                    print(pro)
-                    hellos.append(c)
+                    print(host)
+                    #hellos.append(c)
                     totalCORS += 1
 
-        tag.contents = [re.sub('(\w+)://', protocol + "://", tag.contents[0])]
+        tag.contents = [re.sub('(\w+)://([\w\-\.]+)', protocol + "://" + hostname, tag.contents[0])]
 
     print({"totalTags: ": totalTags,
            "totalCORS:": totalCORS,
@@ -96,18 +96,9 @@ def corsByProtcol(url):
            "Frames Rendered with CORS ": corsFrames,
            "Scripts Rendered with CORS ": corsScripts})
 
-    with open("trial_html.html", 'w') as f:
+    with open(name_of_file, 'w') as f:
         f.write(str(soup.prettify()))
 
 
 
-corsByProtcol('https://www.youtube.com/')
-
-# for h in hellos:
-#     print(h)
-#     print('\n')
-#     print('\n')
-#     print('\n')
-#     print('\n')
-
-#     print('\n')
+corsByHostname("https://www.youtube.com/", "youTube.html")
