@@ -29,7 +29,7 @@ def corsByProtcol(url):
 
     # all tags that have a src attribute where the src is not our og source
     everything= soup.find_all(lambda tag: tag.has_attr("src"))
-    everythingCORS=soup.find_all(lambda tag: tag.has_attr("src") and originExtractor.get_protocol(tag["src"]) != protocol)
+    everythingCORS=soup.find_all(lambda tag: tag.has_attr("src") and originExtractor.get_protocol(tag["src"]) not in (protocol, None))
     # print("percent")
     # print(len(everythingCORS))
 

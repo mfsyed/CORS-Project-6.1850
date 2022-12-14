@@ -11,6 +11,9 @@ def get_hostname(new_url, hostname):
 
 def get_protocol(new_url):
     pros = re.findall('(\w+)://', new_url)
-    #print("pros")
-    #print(pros)
+    # print("pros")
+    # print(pros)
+    # print(new_url)
+    if pros == []:
+        return None
     return re.findall('(\w+)://', new_url)[0]
