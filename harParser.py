@@ -79,3 +79,28 @@ typesTime, types, typeTimeAverage = getTimesByResourceTypes(resourceTypes, times
 print(types)
 
 print(typeTimeAverage)
+
+
+def getProtocolBasedCORS(protocols, protocol):
+    count = 0
+
+    for word in protocols:
+        if word != protocol:
+            count += 1
+
+    return count
+
+#print(getProtocolBasedCORS(protocols,"https"))
+
+
+def getHostnameBasedCORS(hostnames, hostname):
+    count = 0
+
+    for word in hostnames:
+        print(word)
+        if word != hostname:
+            count += 1
+
+    return count
+
+print(getHostnameBasedCORS(hostnames, "twitter.com"))
