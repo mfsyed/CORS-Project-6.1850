@@ -101,4 +101,4 @@ def corsByHostname(url, name_of_file):
 
 
 
-corsByHostname("https://www.youtube.com/", "youTube.html")
+corsByHostname("https://twitter.com/search?q=%23home", "twitter.html")
