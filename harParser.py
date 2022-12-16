@@ -1,8 +1,14 @@
 import twitterNetwork
+import youTubeNetwork
+import sixNetwork
 import originExtractor
 
 twitterDictionary = twitterNetwork.logDictionary
+youTubeDictionary = youTubeNetwork.logDictionary
+sixDictionary = sixNetwork.logDictionary
 
+curDictionary = sixDictionary
+curHostName = "61040-fa22.github.io"
 
 def extractInformation(logDictionary):
 
@@ -71,15 +77,10 @@ def getTimesByResourceTypes(resourceTypes, times, responseCORSheader):
 
 
 
-resourceTypes, protocols, hostnames, times, requestURLs, responseCORSheader = extractInformation(twitterDictionary)
+resourceTypes, protocols, hostnames, times, requestURLs, responseCORSheader = extractInformation(curDictionary)
 
 
 typesTime, types, typeTimeAverage = getTimesByResourceTypes(resourceTypes, times, responseCORSheader)
-
-print(types)
-
-print(typeTimeAverage)
-
 
 def getProtocolBasedCORS(protocols, protocol):
     count = 0
@@ -89,9 +90,6 @@ def getProtocolBasedCORS(protocols, protocol):
             count += 1
 
     return count
-
-#print(getProtocolBasedCORS(protocols,"https"))
-
 
 def getHostnameBasedCORS(hostnames, hostname):
     count = 0
@@ -103,4 +101,7 @@ def getHostnameBasedCORS(hostnames, hostname):
 
     return count
 
-print(getHostnameBasedCORS(hostnames, "twitter.com"))
+print(types)
+print(typeTimeAverage)
+print(getProtocolBasedCORS(protocols,"https"))
+print(getHostnameBasedCORS(hostnames, curHostName))
