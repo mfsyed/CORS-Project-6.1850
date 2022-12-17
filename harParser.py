@@ -1,14 +1,15 @@
 import twitterNetwork
 import youTubeNetwork
 import sixNetwork
+import netflixNetwork
 import originExtractor
 
 twitterDictionary = twitterNetwork.logDictionary
 youTubeDictionary = youTubeNetwork.logDictionary
 sixDictionary = sixNetwork.logDictionary
-
-curDictionary = sixDictionary
-curHostName = "61040-fa22.github.io"
+netflixDictionary = netflixNetwork.logDictionary
+curDictionary = netflixDictionary
+curHostName = "netflix.com"
 
 def extractInformation(logDictionary):
 
@@ -19,7 +20,9 @@ def extractInformation(logDictionary):
     times = []
     requestURLs = []
     responseCORSheader = []
-
+    numberOfCORSRequests = 0
+    print("Number of requests")
+    print(len(entries))
     #print(len(logDictionary["log"]["entries"]))
 
     for entry in entries:
@@ -34,15 +37,18 @@ def extractInformation(logDictionary):
 
         hostnames.append(originExtractor.get_hostname(url,''))
         isCORS = False
-        for header in entry["response"]["headers"]:
-            if header["name"] == "access-control-allow-origin":
+        for header in entry["request"]["headers"]:
+            if header["name"].lower() == "sec-fetch-site" and header["value"] == "cross-site":
                 responseCORSheader.append(1)
+                numberOfCORSRequests += 1
                 isCORS = True
 
         if not isCORS:
-            print(requestURLs[-1])
+            #print(requestURLs[-1])
             responseCORSheader.append(0)
 
+    print("Number of CORS Requests")
+    print(numberOfCORSRequests)
     return resourceTypes, protocols, hostnames, times, requestURLs, responseCORSheader
 
 
@@ -82,26 +88,27 @@ resourceTypes, protocols, hostnames, times, requestURLs, responseCORSheader = ex
 
 typesTime, types, typeTimeAverage = getTimesByResourceTypes(resourceTypes, times, responseCORSheader)
 
-def getProtocolBasedCORS(protocols, protocol):
+def getProtocolBasedCORS(responseCORSheader, protocols, protocol):
     count = 0
 
-    for word in protocols:
-        if word != protocol:
+    for i in range(len(responseCORSheader)):
+        if responseCORSheader[i] == 1 and protocols[i] != protocol:
             count += 1
 
     return count
 
-def getHostnameBasedCORS(hostnames, hostname):
+def getHostnameBasedCORS(responseCORSheader, hostnames, hostname):
     count = 0
 
-    for word in hostnames:
-        print(word)
-        if word != hostname:
+    for i in range(len(responseCORSheader)):
+        if responseCORSheader[i] == 1 and hostnames[i] != hostname:
             count += 1
 
     return count
+
+
 
 print(types)
 print(typeTimeAverage)
-print(getProtocolBasedCORS(protocols,"https"))
-print(getHostnameBasedCORS(hostnames, curHostName))
+print(getProtocolBasedCORS(responseCORSheader, protocols,"https"))
+print(getHostnameBasedCORS(responseCORSheader, hostnames, curHostName))
