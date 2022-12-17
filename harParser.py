@@ -8,8 +8,8 @@ twitterDictionary = twitterNetwork.logDictionary
 youTubeDictionary = youTubeNetwork.logDictionary
 sixDictionary = sixNetwork.logDictionary
 netflixDictionary = netflixNetwork.logDictionary
-curDictionary = netflixDictionary
-curHostName = "netflix.com"
+curDictionary = twitterDictionary
+curHostName = "twitter.com"
 
 def extractInformation(logDictionary):
 
