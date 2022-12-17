@@ -3,13 +3,15 @@ import youTubeNetwork
 import sixNetwork
 import netflixNetwork
 import originExtractor
+import cnnNetwork
 
 twitterDictionary = twitterNetwork.logDictionary
 youTubeDictionary = youTubeNetwork.logDictionary
 sixDictionary = sixNetwork.logDictionary
 netflixDictionary = netflixNetwork.logDictionary
-curDictionary = twitterDictionary
-curHostName = "twitter.com"
+cnnDictionary = cnnNetwork.logDictionary
+curDictionary = netflixDictionary
+curHostName = "netflix.com"
 
 def extractInformation(logDictionary):
 
@@ -56,10 +58,13 @@ def getTimesByResourceTypes(resourceTypes, times, responseCORSheader):
     typesTime = dict() # {type: list of times it took to complete request that rendered type}
     types = dict() # {type: amount of type}
     typeTimeAverage = dict() # {type: averageTime}
-
+    typePercentage = dict()
+    print("numCors")
+    numCORS = 0
     for i in range(len(responseCORSheader)):
         #checking if cors
         if responseCORSheader[i] == 1:
+            numCORS += 1
             resourceType = resourceTypes[i]
             time = times[i]
 
@@ -73,11 +78,12 @@ def getTimesByResourceTypes(resourceTypes, times, responseCORSheader):
                 typesTime[resourceType] = []
             typesTime[resourceType].append(time)
 
+    print(numCORS)
     for resourceType in typesTime:
         typeTimeAverage[resourceType] = sum(typesTime[resourceType])/types[resourceType]
-
+        typePercentage[resourceType] = types[resourceType]/numCORS
     
-    return typesTime, types, typeTimeAverage
+    return typesTime, types, typeTimeAverage, typePercentage
 
 
 
@@ -86,7 +92,7 @@ def getTimesByResourceTypes(resourceTypes, times, responseCORSheader):
 resourceTypes, protocols, hostnames, times, requestURLs, responseCORSheader = extractInformation(curDictionary)
 
 
-typesTime, types, typeTimeAverage = getTimesByResourceTypes(resourceTypes, times, responseCORSheader)
+typesTime, types, typeTimeAverage, typePercentage = getTimesByResourceTypes(resourceTypes, times, responseCORSheader)
 
 def getProtocolBasedCORS(responseCORSheader, protocols, protocol):
     count = 0
@@ -112,3 +118,5 @@ print(types)
 print(typeTimeAverage)
 print(getProtocolBasedCORS(responseCORSheader, protocols,"https"))
 print(getHostnameBasedCORS(responseCORSheader, hostnames, curHostName))
+print("Percentage of CORS requests dedictated to render a resource Type")
+print(typePercentage)
