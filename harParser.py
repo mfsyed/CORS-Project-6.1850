@@ -1,14 +1,18 @@
 import twitterNetwork
 import youTubeNetwork
+import cnnNetwork
+import netflixNetwork
 import sixNetwork
 import originExtractor
 
 twitterDictionary = twitterNetwork.logDictionary
 youTubeDictionary = youTubeNetwork.logDictionary
 sixDictionary = sixNetwork.logDictionary
+cnnDictionary = cnnNetwork.logDictionary
+netflixDictionary = netflixNetwork.logDictionary
 
-curDictionary = sixDictionary
-curHostName = "61040-fa22.github.io"
+curDictionary = netflixDictionary
+curHostName = "netflix.com"
 
 def extractInformation(logDictionary):
 
@@ -20,7 +24,7 @@ def extractInformation(logDictionary):
     requestURLs = []
     responseCORSheader = []
 
-    #print(len(logDictionary["log"]["entries"]))
+    print("Entries: ", len(logDictionary["log"]["entries"]))
 
     for entry in entries:
 
@@ -103,5 +107,5 @@ def getHostnameBasedCORS(hostnames, hostname):
 
 print(types)
 print(typeTimeAverage)
-print(getProtocolBasedCORS(protocols,"https"))
-print(getHostnameBasedCORS(hostnames, curHostName))
+print("Diff by protocol: ", getProtocolBasedCORS(protocols,"https"))
+print("Diff by hostname: ", getHostnameBasedCORS(hostnames, curHostName))
