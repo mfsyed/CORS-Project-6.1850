@@ -10,8 +10,8 @@ youTubeDictionary = youTubeNetwork.logDictionary
 sixDictionary = sixNetwork.logDictionary
 netflixDictionary = netflixNetwork.logDictionary
 cnnDictionary = cnnNetwork.logDictionary
-curDictionary = netflixDictionary
-curHostName = "netflix.com"
+curDictionary = sixDictionary
+curHostName = "61040-fa22.github.io"
 
 def extractInformation(logDictionary):
 
@@ -51,6 +51,9 @@ def extractInformation(logDictionary):
 
     print("Number of CORS Requests")
     print(numberOfCORSRequests)
+
+    print("percentage")
+    print(numberOfCORSRequests/len(responseCORSheader))
     return resourceTypes, protocols, hostnames, times, requestURLs, responseCORSheader
 
 
@@ -113,6 +116,12 @@ def getHostnameBasedCORS(responseCORSheader, hostnames, hostname):
     return count
 
 
+def getTotalTimes(types, typeTimeAverage):
+    total = 0
+    for resourceType, amount in types.items():
+        total += amount * typeTimeAverage[resourceType]
+
+    return total
 
 print(types)
 print(typeTimeAverage)
@@ -120,3 +129,5 @@ print(getProtocolBasedCORS(responseCORSheader, protocols,"https"))
 print(getHostnameBasedCORS(responseCORSheader, hostnames, curHostName))
 print("Percentage of CORS requests dedictated to render a resource Type")
 print(typePercentage)
+print("total time")
+print(getTotalTimes(types, typeTimeAverage))
